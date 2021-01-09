@@ -5,6 +5,7 @@
     <title>hello world!!</title>
 </head>
 <body>
+<!--    스프링 시큐리티<->git 노트북 세팅-->
     <h1 th:inline="text"> hello [[${#httpServletRequest.remoteUser}]]!</h1>
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Sign Out"/>
