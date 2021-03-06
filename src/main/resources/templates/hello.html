@@ -2,9 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>hello world</title>
+    <title>hello world!!</title>
 </head>
 <body>
+<!--    스프링 시큐리티<->git 노트북 세팅-->
     <h1 th:inline="text"> hello [[${#httpServletRequest.remoteUser}]]!</h1>
     <form th:action="@{/logout}" method="post">
         <input type="submit" value="Sign Out"/>
