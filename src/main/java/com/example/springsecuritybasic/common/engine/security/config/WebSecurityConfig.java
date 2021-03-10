@@ -1,9 +1,12 @@
-package com.example.springsecuritybasic;
+package com.example.springsecuritybasic.common.engine.security.config;
 
-import com.example.springsecuritybasic.common.engine.security.config.CustomAuthProvider;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,13 +17,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private CustomAuthProvider customAuthProvider;
+    private final AuthenticationProvider authenticationProvider;
+    private final AuthenticationSuccessHandler authenticationSuccessHandler;
+    private final AuthenticationFailureHandler authenticationFailureHandler;
+    private final UserDetailsService userDetailsService;
+
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -36,7 +45,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authenticationProvider(customAuthProvider)//로그인 요청시 AuthenticationProvider로 요청이 전달됨
                 .authorizeRequests() //요청을 어떻게 보안을 걸 것이냐 설정하는 것 (가장 중요)
                     .antMatchers("/","/home").permitAll() //css, js, img  파일 더 있을 것
                     .anyRequest().authenticated()
@@ -46,30 +54,39 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginProcessingUrl("/loginProcess") //사용자 로그인 화면에서 아이디/비밀번호 입력후 전송되는 url, form태그의 action과 매핑된다.
                     .usernameParameter("userName")
                     .passwordParameter("password")
+                    .successHandler(authenticationSuccessHandler)
+                    .failureHandler(authenticationFailureHandler)
                     .permitAll() //모두 들어올 수 있게
                     .and()
                 .csrf()
                     .disable()
                 .logout()
                     .logoutSuccessUrl("/") //로그아웃 성공 후 url
-                    .permitAll();
+                    .permitAll()
+                    .and()
+                .authenticationProvider(authenticationProvider);//로그인 요청시 AuthenticationProvider로 요청이 전달됨
 
 
     }
 
-    @Bean
     @Override
-    protected UserDetailsService userDetailsService() {
-        UserDetails user =
-                User.withDefaultPasswordEncoder()
-                    .username("user")
-                    .password(passwordEncoder().encode("password"))
-                    .roles("USER")
-                    .build();
-
-        return new InMemoryUserDetailsManager(user);
-
+    public void configure(AuthenticationManagerBuilder auth) throws Exception{
+        auth.userDetailsService(userDetailsService);
     }
+
+    //백기선님
+//    @Bean
+//    @Override
+//    protected UserDetailsService userDetailsService() {
+//        UserDetails user =
+//                User.withDefaultPasswordEncoder()
+//                    .username("user")
+//                    .password(passwordEncoder().encode("password"))
+//                    .roles("USER")
+//                    .build();
+//
+//        return new InMemoryUserDetailsManager(user);
+//    }
 
 //    백기선님
 //    @Override

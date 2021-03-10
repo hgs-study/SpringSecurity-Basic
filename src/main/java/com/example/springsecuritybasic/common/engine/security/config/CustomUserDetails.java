@@ -4,11 +4,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 
 @Getter
 @Setter
+@Component
 public class CustomUserDetails implements UserDetails {
 
     private static final long serialVersionUID = 1L;
@@ -17,6 +19,7 @@ public class CustomUserDetails implements UserDetails {
     private String pwd;
     private String auth;
 
+    private Collection<? extends GrantedAuthority> authorities;
     //사용자에게 부여된 권한을 리턴
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
