@@ -11,6 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
@@ -20,12 +22,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private CustomAuthProvider customAuthProvider;
 
+    @Bean
+    public PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder();
+    }
+
     //사용자 요청 중 /resources/로 시작하는 요청은 제외
     @Override
     public void configure(WebSecurity web) throws Exception{
         web.ignoring().antMatchers("/resources/**");
     }
-
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -57,7 +63,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         UserDetails user =
                 User.withDefaultPasswordEncoder()
                     .username("user")
-                    .password("password")
+                    .password(passwordEncoder().encode("password"))
                     .roles("USER")
                     .build();
 

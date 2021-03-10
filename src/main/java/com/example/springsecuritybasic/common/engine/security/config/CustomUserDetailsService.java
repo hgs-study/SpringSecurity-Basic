@@ -1,12 +1,29 @@
 package com.example.springsecuritybasic.common.engine.security.config;
 
+import com.example.springsecuritybasic.business.user.domain.User;
+import com.example.springsecuritybasic.business.user.domain.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import java.util.Optional;
+
+@RequiredArgsConstructor
 public class CustomUserDetailsService  implements UserDetailsService {
+
+    private final UserRepository userRepository;
+
+    private final CustomUserDetails customUserDetails;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return null;
+        User user = Optional.ofNullable(userRepository.findByUsername(username))
+                                    .orElseThrow(()-> new UsernameNotFoundException("아이디가 존재하지 않습니다."));
+        customUserDetails.setId(user.getUsername());
+        customUserDetails.setPwd(user.getPassword());
+        customUserDetails.setAuth(user.getAuthority());
+
+        return customUserDetails;
     }
 }
