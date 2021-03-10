@@ -17,14 +17,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-    @Id @GeneratedValue
-    @Column(name="seq")
-    private Long id;
-    @Column(name="username")
-    private String username;
-    private String password;
-    @Column(name = "authority")
-    private String authority;
-    private LocalDateTime regDt;
-    private LocalDateTime modDt;
+    @Id
+    @Column(name="id")
+    private String id;
+    @Column(name="pwd")
+    private String pwd;
+    @Column(name = "auth")
+    private String auth;
 }

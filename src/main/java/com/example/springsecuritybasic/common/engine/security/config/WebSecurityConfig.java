@@ -23,9 +23,11 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@ComponentScan(basePackages = {"com.example.springsecuritybasic.*"})
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationProvider authenticationProvider;
+    //private final AuthenticationProvider authenticationProvider;
     private final AuthenticationSuccessHandler authenticationSuccessHandler;
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final UserDetailsService userDetailsService;
@@ -43,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    public void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests() //요청을 어떻게 보안을 걸 것이냐 설정하는 것 (가장 중요)
                     .antMatchers("/","/home").permitAll() //css, js, img  파일 더 있을 것
@@ -54,8 +56,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .loginProcessingUrl("/loginProcess") //사용자 로그인 화면에서 아이디/비밀번호 입력후 전송되는 url, form태그의 action과 매핑된다.
                     .usernameParameter("userName")
                     .passwordParameter("password")
-                    .successHandler(authenticationSuccessHandler)
-                    .failureHandler(authenticationFailureHandler)
+//                    .successHandler(authenticationSuccessHandler)
+//                    .failureHandler(authenticationFailureHandler)
                     .permitAll() //모두 들어올 수 있게
                     .and()
                 .csrf()
@@ -70,7 +72,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(AuthenticationManagerBuilder auth) throws Exception{
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
         auth.userDetailsService(userDetailsService);
     }
 
