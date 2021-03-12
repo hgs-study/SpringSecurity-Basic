@@ -19,7 +19,8 @@ public class SetUser implements CommandLineRunner {
     public void run(String... args) throws Exception {
         User saveUser = new User();
         saveUser.setId("test");
-        saveUser.setPwd(passwordEncoder.encode("password"));
+        //saveUser.setPwd("test");
+        saveUser.setPwd(passwordEncoder.encode("test"));
         saveUser.setAuth("USER");
         userRepository.save(saveUser);
     }

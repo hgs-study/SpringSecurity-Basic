@@ -35,7 +35,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
     //사용자 정보가 authentication 객체에 담긴다.
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException{
-
+        log.info("start authenticate");
         String id = authentication.getName();
         String pwd = (String) authentication.getCredentials();
 
