@@ -1,7 +1,7 @@
 package com.example.springsecuritybasic.common.engine.security.config;
 
-import com.example.springsecuritybasic.business.user.domain.User;
-import com.example.springsecuritybasic.business.user.domain.UserRepository;
+import com.example.springsecuritybasic.business.member.application.MemberRepository;
+import com.example.springsecuritybasic.business.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,15 +13,15 @@ public class SetUser implements CommandLineRunner {
 
 
     private final PasswordEncoder passwordEncoder;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
     @Override
     public void run(String... args) throws Exception {
-        User saveUser = new User();
-        saveUser.setId("test");
-        //saveUser.setPwd("test");
-        saveUser.setPwd(passwordEncoder.encode("test"));
-        saveUser.setAuth("USER");
-        userRepository.save(saveUser);
+        Member member = new Member();
+        //saveUser.setPwd("test");,
+        member.setName("홍길동");
+        member.setPassword(passwordEncoder.encode("test"));
+        member.setAccount("test");
+        memberRepository.save(member);
     }
 }
